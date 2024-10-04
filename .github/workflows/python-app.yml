@@ -67,4 +67,4 @@ jobs:
                 --health-timeout 5s
                 --health-retries 5
             ports:
-                - 49156:5432
+                - 49155:5432
