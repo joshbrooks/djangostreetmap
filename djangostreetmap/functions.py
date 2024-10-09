@@ -33,7 +33,7 @@ class AsGeoJson(GeoFunc):
 
 
 class AsFeature(JSONObject):
-    def __init__(self, geom_field: str = "geom", **fields: Dict[str, Any]):
+    def __init__(self, geom_field: str = "geom", **fields: Union[F, Expression, str]):
         expressions = [
             Value("type"),
             Value("Feature"),
@@ -50,7 +50,7 @@ class AsFeature(JSONObject):
 
 
 class AsFeatureCollection(JSONObject):
-    def __init__(self, geom_field: str = "geom", **fields: Dict[str, Any]):
+    def __init__(self, geom_field: str = "geom", **fields: Union[F, Expression, str]):
         expressions = [Value("type"), Value("FeatureCollection"), Value("features"), JSONBAgg(AsFeature(geom_field, **fields), default=Value("[]"))]
         super(JSONObject, self).__init__(*expressions)
 
@@ -78,7 +78,6 @@ class Intersects(RawSQL):
     """
 
     def __init__(self, instance: Type[models.Model], relation: str = "ST_INTERSECTS", target_geom_field: str = "geom", geom_field: str = "geom", srid: int = 3857):
-
         pk_field = instance._meta.pk
         assert pk_field
 
