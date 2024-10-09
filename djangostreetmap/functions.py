@@ -44,7 +44,7 @@ class AsFeature(JSONObject):
             Value("geometry"),
             AsGeoJson(geom_field),
             Value("properties"),
-            JSONObject(**fields),
+            JSONObject(**fields),  # type: ignore[arg-type]
         ]
         super(JSONObject, self).__init__(*expressions)
 
