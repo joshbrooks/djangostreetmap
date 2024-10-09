@@ -9,7 +9,6 @@ from . import sources
 
 class LayersTestCase(TestCase):
     def test_layer(self):
-
         trunk_roads = layer.Layer(
             type="line",
             id="trunk_roads",
@@ -22,7 +21,6 @@ class LayersTestCase(TestCase):
         trunk_roads.json()
 
     def test_reverse_layer(self):
-
         layer_detail = {
             "id": "landuse_residential",
             "type": "fill",
@@ -60,7 +58,6 @@ class SourcesTestCase(TestCase):
         sources.RasterDem(url="mapbox://mapbox.terrain-rgb").json()
 
     def test_geojson(self):
-
         sources.GeoJson(
             data={"type": "Feature", "geometry": {"type": "Point", "coordinates": [-77.0323, 38.9131]}, "properties": {"title": "Mapbox DC", "marker-symbol": "monument"}}
         ).json()
@@ -94,7 +91,6 @@ class DemoTilesTest(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-
         import json
         from importlib import resources
 
@@ -111,7 +107,6 @@ class DemoTilesTest(TestCase):
         print(root_two)
 
     def test_demo_backgroundlayer(self):
-
         # Read the json
         # Try layers...
         layer.Layer(**self.style.get("layers")[0])
@@ -127,7 +122,6 @@ class OsmLibertyTest(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-
         import json
         from importlib import resources
 
@@ -144,7 +138,6 @@ class OsmLibertyTest(TestCase):
         print(root_two)
 
     def test_demo_backgroundlayer(self):
-
         # Read the json
         # Try layers...
         layer.Layer(**self.style.get("layers")[0])

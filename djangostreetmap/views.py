@@ -60,7 +60,6 @@ class TileLayerView(View):
         return self.layers
 
     def _generate_tile(self, tile: Tile) -> List[bytes]:
-
         params = asdict(tile)
 
         with connection.cursor() as cursor:
@@ -112,7 +111,6 @@ class TileLayerView(View):
 
 class BuildingPolygon(TileLayerView):
     def get_layers(self, tile: Tile):
-
         if tile.zoom < 14:
             return []
 
@@ -129,7 +127,6 @@ class BuildingPolygon(TileLayerView):
 
 class Roads(TileLayerView):
     def get_layers(self, tile: Tile):
-
         road_osm_types = [
             ("trunk", 2),
             ("steps", 12),
@@ -251,7 +248,7 @@ class ModelFeatureCollectionView(View):
         queryset = queryset.annotate(in_area=Intersects(intersect)).filter(in_area=True)
         queryset = queryset.filter(**filter_kwargs)
 
-        attributes = {field.name: field.name for field in model._meta.fields if field.name != "geom"}
+        attributes: Dict[str, Any] = {field.name: field.name for field in model._meta.fields if field.name != "geom"}
         return queryset.aggregate(_=AsFeatureCollection("geom_t", **attributes))["_"]
 
 
@@ -262,7 +259,6 @@ class MapStyle(View):
     """
 
     def get(self, request: HttpRequest, *args, **kwargs):
-
         font = ["Roboto Regular"]
         # map = Root()
         road_source = sources.Vector(type="vector", tiles=[f"{request.scheme}://{request.get_host()}{reverse('djangostreetmap:roads')}{{z}}/{{x}}/{{y}}.pbf"])
