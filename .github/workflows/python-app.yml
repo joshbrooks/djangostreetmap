@@ -39,10 +39,10 @@ jobs:
     - name: Produce coverage XML
       run: poetry run coverage xml
 
-    - name: "Upload coverage to Codecov"
-      uses: codecov/codecov-action@v2
-      with:
-        fail_ci_if_error: true
+    # - name: "Upload coverage to Codecov"
+    #   uses: codecov/codecov-action@v2
+    #   with:
+    #     fail_ci_if_error: true
 
     - name: Test mypy
       if: always()
