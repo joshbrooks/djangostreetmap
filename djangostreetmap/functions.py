@@ -1,16 +1,12 @@
-from typing import Any, Dict, Type
+from typing import Any, Dict, Type, Union
 
-import django
 from django.contrib.gis.db import models
 from django.contrib.gis.db.models.functions import GeoFunc
 from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models import F, Value
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import Expression, RawSQL
 
-if django.VERSION >= (3, 2):
-    from django.db.models.functions.comparison import JSONObject  # type: ignore
-else:
-    from .json_object import JSONObject
+from .json_object import JSONObject
 
 """
 Functions to generate JSON features & collections
