@@ -1,4 +1,4 @@
-from typing import Any, Dict, Type, Union
+from typing import Type, Union
 
 from django.contrib.gis.db import models
 from django.contrib.gis.db.models.functions import GeoFunc
