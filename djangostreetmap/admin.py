@@ -1,5 +1,9 @@
 from django.contrib import admin
-from django.contrib.gis.forms import OSMWidget
+
+try:
+    from django.contrib.gis.forms.widgets import OSMWidget
+except ImportError:
+    from django.contrib.gis.admin import OSMWidget  # type: ignore
 
 from djangostreetmap import models
 

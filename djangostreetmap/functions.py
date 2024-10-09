@@ -1,16 +1,12 @@
-from typing import Any, Dict, Type
+from typing import Type, Union
 
-import django
 from django.contrib.gis.db import models
 from django.contrib.gis.db.models.functions import GeoFunc
 from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models import F, Value
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import Expression, RawSQL
 
-if django.VERSION >= (3, 2):
-    from django.db.models.functions.comparison import JSONObject  # type: ignore
-else:
-    from .json_object import JSONObject
+from .json_object import JSONObject
 
 """
 Functions to generate JSON features & collections
@@ -37,7 +33,7 @@ class AsGeoJson(GeoFunc):
 
 
 class AsFeature(JSONObject):
-    def __init__(self, geom_field: str = "geom", **fields: Dict[str, Any]):
+    def __init__(self, geom_field: str = "geom", **fields: Union[F, Expression, str]):
         expressions = [
             Value("type"),
             Value("Feature"),
@@ -48,13 +44,13 @@ class AsFeature(JSONObject):
             Value("geometry"),
             AsGeoJson(geom_field),
             Value("properties"),
-            JSONObject(**fields),
+            JSONObject(**fields),  # type: ignore[arg-type]
         ]
         super(JSONObject, self).__init__(*expressions)
 
 
 class AsFeatureCollection(JSONObject):
-    def __init__(self, geom_field: str = "geom", **fields: Dict[str, Any]):
+    def __init__(self, geom_field: str = "geom", **fields: Union[F, Expression, str]):
         expressions = [Value("type"), Value("FeatureCollection"), Value("features"), JSONBAgg(AsFeature(geom_field, **fields), default=Value("[]"))]
         super(JSONObject, self).__init__(*expressions)
 
@@ -82,7 +78,6 @@ class Intersects(RawSQL):
     """
 
     def __init__(self, instance: Type[models.Model], relation: str = "ST_INTERSECTS", target_geom_field: str = "geom", geom_field: str = "geom", srid: int = 3857):
-
         pk_field = instance._meta.pk
         assert pk_field
 

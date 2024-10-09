@@ -69,7 +69,7 @@ class MvtQuery:
         """
         if not self.attributes and not self.calculated_attributes:
             return sql.SQL("").format()
-        params = None
+        params: sql.Composed | sql.Literal | None = None
         for a in self.attributes:
             if not params:
                 params = sql.Literal(a)
@@ -77,11 +77,11 @@ class MvtQuery:
                 params += sql.Literal(a)  # Name of the key is the same as the field
             params += sql.Identifier(a)  # The field to use as the value for the JSON
 
-        for field, expression in self.calculated_attributes.items():
+        for field_name, expression in self.calculated_attributes.items():
             if not params:
-                params = sql.Literal(field)
+                params = sql.Literal(field_name)
             else:
-                params += sql.Literal(field)  # Name of the key is the same as the field
+                params += sql.Literal(field_name)  # Name of the key is the same as the field
             assert params
             params += expression  # The expression to use as the value for the JSON
 
@@ -165,7 +165,6 @@ class MvtQuery:
 
     @classmethod
     def from_model(cls, model, *args, **kwargs) -> "MvtQuery":
-
         field = kwargs.pop("field", get_geom_field(model))
         attributes = kwargs.pop("attributes", get_model_attributes(model))
         pk = kwargs.get("pk", get_model_pk_field(model))
@@ -198,6 +197,10 @@ class MvtQuery:
 
         if not attributes:
             attributes = [pk]
+
+        if transform is None:
+            # "cast" transform to the right type...
+            transform = False
 
         instance = cls(
             table=cte_name,

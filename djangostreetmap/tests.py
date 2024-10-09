@@ -42,7 +42,6 @@ road_osm_types: List[Tuple[str, int]] = [
 
 class RoadMvtTestCase(TestCase):
     def test_roads_model(self):
-
         road_types = [road_type for road_type, min_zoom in road_osm_types if port_moresby.zoom > min_zoom]
 
         # Build an array for the query
@@ -62,10 +61,9 @@ class RoadMvtTestCase(TestCase):
             cursor.execute(query.as_mvt(), asdict(port_moresby))
             tile_response = cursor.fetchone()
             content = tile_response[0]  # type: memoryview
-        return bytes(content)
+        _ = bytes(content)
 
     def test_roads_queryset(self):
-
         q = Q()
         for road_type, min_zoom in road_osm_types:
             if port_moresby.zoom >= min_zoom:
@@ -80,20 +78,18 @@ class RoadMvtTestCase(TestCase):
             cursor.execute(mvtquery.as_mvt(), params)
             tile_response = cursor.fetchone()
             content = tile_response[0]  # type: memoryview
-        return bytes(content)
+        _ = bytes(content)
 
 
 class FromQueryTestCase(TestCase):
     def test_from_query(self):
-
         with connection.cursor() as cursor:
             cursor.execute(MvtQuery.from_model(RoadLine).as_mvt(), asdict(port_moresby))
             tile_response = cursor.fetchone()
             content = tile_response[0]  # type: memoryview
-        return bytes(content)
+        _ = bytes(content)
 
     def test_from_qs(self):
-
         queryset = RoadLine.objects.filter(pk__in=[1])
         mvtquery = MvtQuery.from_queryset(queryset)
         params = asdict(port_moresby)
@@ -103,7 +99,7 @@ class FromQueryTestCase(TestCase):
             cursor.execute(mvtquery.as_mvt(), params)
             tile_response = cursor.fetchone()
             content = tile_response[0]  # type: memoryview
-        return bytes(content)
+        _ = bytes(content)
 
 
 class SerializerTestCase(TestCase):
